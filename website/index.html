@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forward Deployed Engineering from Scratch</title>
+<meta name="description" content="130 lessons, 12 phases, 10 flagship builds, 12 field drills, 6 capstones, 150+ interview questions. The complete discipline of the Forward Deployed Engineer. Free and open source.">
+<style>
+  :root{
+    --bg:#0f0d0a; --bg2:#161310; --panel:#1c1814; --border:#3a3026;
+    --text:#f2ede7; --muted:#ad9f8f; --dim:#7b6f5d;
+    --accent:#f59e0b; --accent2:#60a5fa; --teal:#2dd4bf; --rose:#fb7185;
+    --mono:'SFMono-Regular',Consolas,'Cascadia Code',Menlo,monospace;
+    --sans:-apple-system,'Segoe UI',Inter,Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  nav{position:sticky;top:0;z-index:50;background:rgba(15,13,10,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .logo{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--text);letter-spacing:.5px}
+  .logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:22px;font-size:14px}
+  .nav-links a{color:var(--muted)}
+  .nav-links a:hover{color:var(--text);text-decoration:none}
+  @media(max-width:720px){.nav-links{display:none}}
+  header{padding:84px 0 60px;text-align:center;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(245,158,11,.08),transparent)}
+  .kicker{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+  h1{font-size:clamp(30px,5.2vw,52px);line-height:1.12;font-weight:800;letter-spacing:-1px}
+  h1 em{font-style:normal;color:var(--accent)}
+  .tagline{margin:22px auto 0;max-width:700px;color:var(--muted);font-size:18px}
+  .tagline b{color:var(--text)}
+  .hero-stats{display:flex;justify-content:center;gap:34px;margin-top:38px;flex-wrap:wrap}
+  .hstat{font-family:var(--mono)}
+  .hstat .n{font-size:30px;font-weight:700;color:var(--text)}
+  .hstat .l{font-size:12px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
+  .cta-row{margin-top:38px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:600;border:1px solid var(--border);transition:.15s}
+  .btn.primary{background:var(--accent);color:#231803;border-color:var(--accent)}
+  .btn.primary:hover{filter:brightness(1.1);text-decoration:none}
+  .btn.ghost{color:var(--text)}
+  .btn.ghost:hover{border-color:var(--accent2);text-decoration:none}
+  .clone{margin:26px auto 0;max-width:560px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:13px;color:var(--muted);cursor:pointer}
+  .clone:hover{border-color:var(--accent)}
+  .clone .dollar{color:var(--accent)}
+  section{padding:68px 0;border-top:1px solid var(--border)}
+  h2{font-size:28px;font-weight:750;letter-spacing:-.5px;margin-bottom:8px}
+  .sub{color:var(--muted);margin-bottom:36px;max-width:740px}
+  .mono{font-family:var(--mono)}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px}
+  .card h3{font-size:16px;margin-bottom:8px}
+  .card h3 .ico{color:var(--accent);font-family:var(--mono);margin-right:8px}
+  .card p{font-size:14px;color:var(--muted)}
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:14px}
+  .pbox{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px}
+  .pbox .plabel{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:10px}
+  .bar{height:8px;background:var(--bg2);border-radius:5px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);border-radius:5px;transition:width .3s}
+  .reset{font-size:13px;color:var(--dim);background:none;border:none;cursor:pointer;font-family:var(--mono)}
+  .reset:hover{color:var(--rose)}
+  .phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+  .phead{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+  .phead:hover{background:var(--bg2)}
+  .pnum{font-family:var(--mono);font-size:13px;color:var(--accent);min-width:44px}
+  .pname{font-weight:650;flex:1;font-size:15px}
+  .pmeta{font-family:var(--mono);font-size:12px;color:var(--dim);display:flex;gap:14px;align-items:center}
+  .badge{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid}
+  .badge.code{color:var(--accent);border-color:rgba(245,158,11,.35)}
+  .badge.plan{color:var(--dim);border-color:var(--border)}
+  .chev{color:var(--dim);transition:transform .2s;font-size:12px}
+  .phase.open .chev{transform:rotate(90deg)}
+  .plessons{display:none;border-top:1px solid var(--border)}
+  .phase.open .plessons{display:block}
+  .lesson{display:flex;align-items:center;gap:12px;padding:9px 18px;font-size:14px;border-bottom:1px solid rgba(58,48,38,.5)}
+  .lesson:last-child{border-bottom:none}
+  .lesson:hover{background:var(--bg2)}
+  .lesson input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+  .lesson .lt{flex:1;color:var(--text)}
+  .lesson.done .lt{color:var(--dim);text-decoration:line-through}
+  .lesson .hrs{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  .star{color:var(--teal);font-size:12px}
+  .ldoc{font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid rgba(245,158,11,.3);border-radius:20px;padding:1px 6px}
+  .pprog{font-family:var(--mono);font-size:12px;color:var(--dim);min-width:52px;text-align:right}
+  .tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:14px}
+  .track{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px}
+  .track.rec{border-color:rgba(245,158,11,.45)}
+  .track .tname{font-weight:700;font-size:17px}
+  .track .tdur{font-family:var(--mono);color:var(--accent);font-size:26px;font-weight:700;margin:6px 0}
+  .track .tmeta{font-size:13px;color:var(--muted)}
+  .track .tag{float:right;font-size:11px;color:var(--accent);border:1px solid rgba(245,158,11,.4);padding:2px 8px;border-radius:20px}
+  .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .cap{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:8px}
+  .cap .cn{font-family:var(--mono);font-size:12px;color:var(--accent)}
+  .cap h3{font-size:16px}
+  .cap p{font-size:13.5px;color:var(--muted);flex:1}
+  .cap .cm{font-family:var(--mono);font-size:12px;color:var(--dim)}
+  footer{border-top:1px solid var(--border);padding:44px 0;color:var(--dim);font-size:13px}
+  .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  .foot a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap nav-inner">
+  <div class="logo">FDE<span>/</span>SCRATCH</div>
+  <div class="nav-links">
+    <a href="#method">Method</a><a href="#progress">Progress</a><a href="#curriculum">Curriculum</a>
+    <a href="#interview">Interview Bank</a><a href="#capstones">Capstones</a>
+    <a href="https://github.com/sanjaynandanj/fde-from-scratch" target="_blank">GitHub</a>
+  </div>
+</div></nav>
+
+<header><div class="wrap">
+  <div class="kicker">Models are commoditizing. Deployment is not.</div>
+  <h1>Forward Deployed Engineering<br>from <em>Scratch</em></h1>
+  <p class="tagline"><b>130 lessons. 12 phases. 10 flagship builds. 12 field drills. 6 capstones. 150+ interview questions.</b> The complete discipline of the FDE: theory, interview prep, and the real-world problems you'll face at a customer site.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="n">130</div><div class="l">lessons</div></div>
+    <div class="hstat"><div class="n">12</div><div class="l">phases</div></div>
+    <div class="hstat"><div class="n">150+</div><div class="l">interview Qs</div></div>
+    <div class="hstat"><div class="n">12</div><div class="l">field drills</div></div>
+    <div class="hstat"><div class="n">~190h</div><div class="l">incl. capstones</div></div>
+  </div>
+  <div class="cta-row">
+    <a class="btn primary" href="#curriculum">Start training</a>
+    <a class="btn ghost" href="#interview">Prep the interview</a>
+  </div>
+  <div class="clone" onclick="copyClone(this)" title="Click to copy">
+    <span class="dollar">$</span><span id="clonecmd">git clone https://github.com/sanjaynandanj/fde-from-scratch</span><span style="margin-left:auto;color:var(--dim)">copy</span>
+  </div>
+</div></header>
+
+<section id="method"><div class="wrap">
+  <h2>The method</h2>
+  <p class="sub">The FDE skill set is a braid of four strands no university teaches together: full-stack speed, data wrangling, enterprise deployment, and customer craft. Every lesson trains at least one strand against realistically messy data.</p>
+  <div class="grid3">
+    <div class="card"><h3><span class="ico">01</span>Real problems, not toy problems</h3><p>Every drill uses synthetically-generated messy data: duplicate customers, three date formats, Excel-mangled IDs, feeds that don't arrive. Because that is the job.</p></div>
+    <div class="card"><h3><span class="ico">02</span>Self-testing, zero setup</h3><p>All code is Python stdlib only — nothing to install, no API key. Every flagship and drill asserts its own correctness: <span class="mono">python lesson.py</span> passes or tells you exactly what broke.</p></div>
+    <div class="card"><h3><span class="ico">03</span>Interview-first theory</h3><p>Every theory lesson maps to questions asked in real FDE loops — Palantir decomp, OpenAI forward-deployed, Anthropic applied AI, Scale, Sierra. The interview bank has 150+ answered questions.</p></div>
+    <div class="card"><h3><span class="ico">04</span>Six-beat lessons</h3><p>PROBLEM → INTUITION → BUILD IT → FIELD NOTES → INTERVIEW ANGLE → DRILL. War story in, interview signal out.</p></div>
+    <div class="card"><h3><span class="ico">05</span>MockLLM for the AI parts</h3><p>RAG, structured extraction, and eval harnesses ship with a deterministic, scriptable MockLLM — the harness engineering is unit-testable on your machine.</p></div>
+    <div class="card"><h3><span class="ico">06</span>The capstone spine</h3><p>Capstone 1 simulates a full engagement at a fictional hospital network — discovery transcript to handoff runbook. The other five retrofit onto it.</p></div>
+  </div>
+</div></section>
+
+<section id="progress"><div class="wrap">
+  <h2>Your progress</h2>
+  <p class="sub">Stored in your browser. Check lessons off in the curriculum below.</p>
+  <div class="pgrid">
+    <div class="pbox"><div class="plabel"><span>Lessons</span><span class="mono" id="pl-lessons">0 / 130</span></div><div class="bar"><i id="pb-lessons"></i></div></div>
+    <div class="pbox"><div class="plabel"><span>Phases complete</span><span class="mono" id="pl-phases">0 / 12</span></div><div class="bar"><i id="pb-phases"></i></div></div>
+    <div class="pbox"><div class="plabel"><span>Hours logged</span><span class="mono" id="pl-hours">0 / 190</span></div><div class="bar"><i id="pb-hours"></i></div></div>
+  </div>
+  <button class="reset" onclick="resetProgress()">[ reset progress ]</button>
+</div></section>
+
+<section id="curriculum"><div class="wrap">
+  <h2>Curriculum — 12 phases</h2>
+  <p class="sub">Tap a phase to expand. <span class="star">★</span> = flagship with runnable, self-testing Python (stdlib only). <span class="ldoc">docs</span> = full lesson doc written.</p>
+  <div id="phases"></div>
+</div></section>
+
+<section id="interview"><div class="wrap">
+  <h2>The interview bank</h2>
+  <p class="sub">The theory-interview core of the repo, in <span class="mono">interview-bank/</span>.</p>
+  <div class="grid3">
+    <div class="card"><h3><span class="ico">Q</span>theory-questions.md</h3><p>150+ questions with model answers across six topics: data &amp; integration, systems &amp; deployment, LLM engineering, security &amp; compliance, prototyping, and field judgment.</p></div>
+    <div class="card"><h3><span class="ico">C</span>case-interviews.md</h3><p>Five fully-worked Palantir-style decomp cases — hospital ER, airline ops, warranty fraud, AML triage, retail shrinkage — with grading rubrics.</p></div>
+    <div class="card"><h3><span class="ico">T</span>take-home-patterns.md</h3><p>The five recurring take-home archetypes, time-boxed winning approaches, and the README template that wins.</p></div>
+    <div class="card"><h3><span class="ico">B</span>behavioral.md</h3><p>FDE competency matrix with sample questions and full STAR stories per competency.</p></div>
+    <div class="card"><h3><span class="ico">L</span>company-loops.md</h3><p>What each company's loop emphasizes — Palantir, OpenAI, Anthropic, Scale, Sierra — and how to prepare for each.</p></div>
+    <div class="card"><h3><span class="ico">D</span>12 field drills</h3><p>Graded, self-checking problem sets in <span class="mono">problems/</span> — from Excel-damaged masters to a full end-to-end mini pilot.</p></div>
+  </div>
+</div></section>
+
+<section id="timeline"><div class="wrap">
+  <h2>Time-bound tracks</h2>
+  <p class="sub">Same content, three paces. Week-by-week plans in <span class="mono">ROADMAP.md</span>.</p>
+  <div class="tracks">
+    <div class="track"><span class="tag">interview soon</span><div class="tname">Sprint</div><div class="tdur">6 weeks</div><div class="tmeta">~10 h/week · pass an FDE loop · theory + interview bank + key flagships</div></div>
+    <div class="track rec"><span class="tag">recommended</span><div class="tname">Standard</div><div class="tdur">12 weeks</div><div class="tmeta">~10 h/week · interview-ready AND field-ready · everything except deep capstones</div></div>
+    <div class="track"><span class="tag">operate day one</span><div class="tname">Mastery</div><div class="tdur">18 weeks</div><div class="tmeta">~10 h/week · all drills, three capstones, mock loop, portfolio write-ups</div></div>
+  </div>
+</div></section>
+
+<section id="capstones"><div class="wrap">
+  <h2>Capstone builds</h2>
+  <p class="sub">Six specs with milestones and self-grading rubrics in <span class="mono">capstones/</span>. Capstone 1 is the spine — a full simulated engagement at Meridian Health.</p>
+  <div class="cgrid" id="caps"></div>
+</div></section>
+
+<footer><div class="wrap foot">
+  <div>Forward Deployed Engineering from Scratch · MIT · open source, free forever</div>
+  <div><a href="#curriculum">Curriculum</a> · <a href="#interview">Interview Bank</a> · <a href="#capstones">Capstones</a> · <a href="https://github.com/sanjaynandanj/fde-from-scratch" target="_blank">GitHub</a></div>
+</div></footer>
+
+<script>
+const PHASES=[
+{n:"00",name:"Orientation: The FDE Role",week:"Wk 1",lessons:[["What an FDE actually does: a week in the field",1],["The role landscape: Palantir, OpenAI, Anthropic, Scale, Sierra",1],["FDE vs SWE vs solutions engineer vs consultant",1],["Why now: model commoditization and the deployment gap",1],["The FDE career arc",1],["Setup & repo tour",1]]},
+{n:"01",name:"The Engagement Lifecycle",week:"Wk 1–2",lessons:[["Anatomy of an engagement: discovery → pilot → production → handoff",1.5],["Discovery: finding the metric that gets renewal signed",1],["Scoping: the pilot that proves value in 30 days",1.5],["Time-to-value as the only KPI that matters",1],["The data access battle",1],["Pilot design: seeded wins, visible dashboards, weekly demos",1.5],["From pilot to production",1],["Handoff: making yourself unnecessary",1],["Failure modes: zombie pilots, champion churn, scope death spiral",1],["Drill: 30-day pilot plan from a discovery transcript",1.5]]},
+{n:"02",name:"Rapid Full-Stack Prototyping",week:"Wk 2–3",lessons:[["CSV to working API in one file",2,1],["The demo-quality bar: what to fake, what must be real",1],["Frontend in the field: one HTML file, no build step",1.5],["SQLite as the pilot database",1],["Throwaway vs keepable code",1],["Seeded demo data: realistic, impressive, safe",1.5],["Feature flags for demos",1],["The walking skeleton",1.5],["Excel is the UI",1],["Iteration cadence: shipping daily",1],["Instrumenting the pilot: telemetry that proves value",1.5],["Drill: one-file ops dashboard from a messy export",1]]},
+{n:"03",name:"Data Integration & Entity Resolution",week:"Wk 3–5",lessons:[["Schema inference from scratch: types, nulls, and lies",2,1],["The messy CSV survival kit",1.5],["Date-format hell: 14 formats, one parser",1],["Schema mapping: source → canonical",1.5],["Entity resolution I: normalization, blocking, exact match",2,1],["Entity resolution II: fuzzy matching, scoring, survivorship",1.5],["The ontology: objects and links",1.5],["Incremental sync: watermarks, idempotent upserts",2,1],["Connectors: SQL, REST, SFTP, SAP",1.5],["Data quality gates: quarantine, not rejection",1],["Reconciliation: your numbers vs their numbers",1.5],["Pipeline orchestration from scratch",1.5],["Lineage and auditability",1],["Drill: reconcile two systems that disagree by 3%",1.5]]},
+{n:"04",name:"Enterprise Systems & Deployment",week:"Wk 5–6",lessons:[["Enterprise topology: where your code is allowed to run",1],["Identity: SAML, OIDC, and 'just use our Okta'",1.5],["JWT validation from scratch",2,1],["Networking: VPCs, private links, the firewall ticket",1.5],["On-prem and air-gapped",1.5],["Containers for the field",1],["Secrets management",1],["Observability minimum",1.5],["Databases you'll meet: Oracle, SQL Server, the DBA",1],["Release management for pilots",1],["The IT approval gauntlet",1],["Drill: deployment plan for a bank's VPC",1]]},
+{n:"05",name:"LLM Engineering in the Field",week:"Wk 6–8",lessons:[["RAG from scratch: chunking, retrieval, grounded answers",2.5,1],["Chunking customer documents",1.5],["Retrieval quality: demo vs production",1.5],["Structured extraction: schemas, validation, retry",2,1],["Prompting with customer context",1],["The eval harness: golden sets from customer data",2,1],["Hallucination control: grounding, citations, refusal",1.5],["Agents at customer sites",1.5],["Cost and latency budgets",1],["Model selection in the enterprise",1],["Guardrails: input filters, output filters, audit trails",1.5],["Fine-tuning vs RAG vs prompting",1],["Shipping accuracy honestly",1],["Drill: debug RAG answering from the wrong contract",1.5]]},
+{n:"06",name:"Security, Compliance & Governance",week:"Wk 8–9",lessons:[["The compliance alphabet: SOC 2, ISO, HIPAA, GDPR, FedRAMP",1.5],["Data classification",1],["PII detection and redaction from scratch",2,1],["DPAs and data residency",1],["Least privilege in the field",1],["Audit logging: who saw what, when",1],["AI-specific governance and the EU AI Act",1.5],["Security questionnaires",1],["Incident response with customer data",1],["Drill: redact a dataset for a demo",1]]},
+{n:"07",name:"Customer-Facing Craft",week:"Wk 9–10",lessons:[["Discovery interviews",1.5],["Stakeholder mapping",1],["Requirements decomposition",1.5],["Demo engineering: narrative arc, recovery moves",1.5],["Running the weekly",1],["Objection handling",1],["Saying no: scope control",1],["Working the org",1],["Executive communication: the one-slide update",1],["Escalation",1],["Cross-cultural and remote fieldwork",1],["Drill: rambling email → scoped sprint",1.5]]},
+{n:"08",name:"Problem Decomposition & Case Method",week:"Wk 10–11",lessons:[["The decomp interview: what Palantir actually tests",1.5],["Back-of-envelope engine: estimation with error bars",2,1],["Hypothesis trees",1],["Metric design: gameable vs honest",1.5],["Data-model-first thinking",1],["The 80/20 solution",1],["Trade-off narration",1],["Case walkthrough: hospital bed allocation",1],["Case walkthrough: airline disruption recovery",1],["Drill: three timed decomps",1.5]]},
+{n:"09",name:"Interview Preparation",week:"Wk 11–12",lessons:[["The FDE interview landscape",1],["Coding rounds: practical > leetcode",1.5],["System design for FDEs",1.5],["The take-home: patterns and the README that wins",1.5],["Decomp & case rounds",1],["Behavioral: STAR for customer conflict, ambiguity, speed",1.5],["The demo round",1],["Questions to ask them",0.5],["Theory bank I: data + systems",1.5],["Theory bank II: LLM + deployment",1.5],["Theory bank III: customer + judgment",1],["Mock loop with rubrics",1.5]]},
+{n:"10",name:"Field Drills",week:"Wk 12–13",lessons:[["The Excel-damaged customer master",1],["Three date formats, one timeline",1],["Deduplicate the CRM",1.5],["Reconcile ERP vs bank statement",1.5],["The nightly SFTP feed that sometimes doesn't arrive",1.5],["Parse the fixed-width mainframe export",1.5],["Schema-map four subsidiaries",2],["Golden-set eval for a ticket classifier",1.5],["Redact the dataset, keep it useful",1.5],["The demo is in 4 hours: seed a dataset",1.5],["Debug the pipeline: numbers drifted 3%",2],["End-to-end: raw dumps → entities → API → metrics",2]]},
+{n:"11",name:"Capstones",week:"Wk 13–16",lessons:[["Capstone 1: Pilot-in-a-box (the spine)",28],["Capstone 2: Entity-resolution engine",9],["Capstone 3: RAG deployment with evals",10],["Capstone 4: Legacy bridge",9],["Capstone 5: Demo engineering kit",7],["Capstone 6: Production handoff pack",7]]}
+];
+const DOCS={0:[0,1,2,3,4,5],10:[0,1,2,3,4,5,6,7,8,9,10,11],11:[0,1,2,3,4,5]};
+const CAPS=[
+["01 · THE SPINE","Pilot-in-a-Box","Full engagement at Meridian Health: discovery transcript → 30-day plan → 3-source messy ingestion → entity resolution → ops dashboard → demo script → handoff runbook.","P1–P7 · ~28h"],
+["02","Entity-Resolution Engine","Production-grade dedup across three CRM extracts post-acquisition: blocking, threshold sweeps, survivorship memo, audit trail with un-merge.","P3 · ~9h"],
+["03","RAG Deployment with Evals","Grounded Q&A over policy docs with planted contradictions, customer-built golden set, refusal design, PII-never-in-logs.","P5–P6 · ~10h"],
+["04","Legacy Bridge","1990s lab system, fixed-width nightly SFTP → clean JSON API: drift handling, quarantine, daily reconciliation that catches planted defects.","P3–P4 · ~9h"],
+["05","Demo Engineering Kit","Seeded cast dataset, scene deep-links, timed 6-beat script asserted against live data, drilled failure-recovery playbook.","P2, P7 · ~7h"],
+["06","Production Handoff Pack","Invariant-based monitoring with fault injection, broken-and-verified runbook, training outlines, make-yourself-unnecessary exit criteria.","P4, P7 · ~7h"]];
+const TOTAL_HOURS=190;
+const store={get(){try{return JSON.parse(localStorage.getItem("fdescratch"))||{}}catch{return{}}},set(v){localStorage.setItem("fdescratch",JSON.stringify(v))}};
+function lid(pi,li){return pi+"-"+li}
+function render(){
+  const done=store.get();
+  document.getElementById("phases").innerHTML=PHASES.map((p,pi)=>{
+    const total=p.lessons.length, dn=p.lessons.filter((_,li)=>done[lid(pi,li)]).length;
+    const hrs=p.lessons.reduce((s,l)=>s+l[1],0);
+    const written=p.lessons.filter((l,li)=>l[2]||(DOCS[pi]||[]).includes(li)).length;
+    const badge=written===total?'<span class="badge code">complete</span>':written>0?`<span class="badge code">${written}/${total} written</span>`:'<span class="badge plan">planned</span>';
+    return `<div class="phase" id="ph${pi}">
+      <div class="phead" onclick="togglePhase(${pi})">
+        <span class="pnum">P${p.n}</span><span class="pname">${p.name}</span>
+        <span class="pmeta">${badge}<span>${p.week}</span><span>${total} lessons</span><span>~${Math.round(hrs)}h</span></span>
+        <span class="pprog">${dn}/${total}</span><span class="chev">▶</span>
+      </div>
+      <div class="plessons">${p.lessons.map((l,li)=>`
+        <label class="lesson ${done[lid(pi,li)]?'done':''}">
+          <input type="checkbox" ${done[lid(pi,li)]?'checked':''} onchange="toggleLesson(${pi},${li},this.checked)">
+          <span class="lt">${String(li+1).padStart(2,'0')} · ${l[0]} ${l[2]?'<span class="star">★</span>':(DOCS[pi]||[]).includes(li)?'<span class="ldoc">docs</span>':''}</span>
+          <span class="hrs">${l[1]}h</span>
+        </label>`).join("")}
+      </div></div>`;
+  }).join("");
+  document.getElementById("caps").innerHTML=CAPS.map(c=>`<div class="cap"><span class="cn">CAPSTONE ${c[0]}</span><h3>${c[1]}</h3><p>${c[2]}</p><span class="cm">${c[3]}</span></div>`).join("");
+  updateProgress();
+}
+function togglePhase(pi){document.getElementById("ph"+pi).classList.toggle("open")}
+function toggleLesson(pi,li,val){
+  const d=store.get(); if(val)d[lid(pi,li)]=1; else delete d[lid(pi,li)]; store.set(d);
+  const open=[...document.querySelectorAll(".phase.open")].map(e=>e.id);
+  render(); open.forEach(id=>document.getElementById(id)?.classList.add("open"));
+}
+function updateProgress(){
+  const done=store.get(); let dl=0,dh=0,dp=0,tl=0;
+  PHASES.forEach((p,pi)=>{let all=true;p.lessons.forEach((l,li)=>{tl++;if(done[lid(pi,li)]){dl++;dh+=l[1]}else all=false});if(all)dp++});
+  const set=(id,txt,bid,pct)=>{document.getElementById(id).textContent=txt;document.getElementById(bid).style.width=pct+"%"};
+  set("pl-lessons",`${dl} / ${tl}`,"pb-lessons",100*dl/tl);
+  set("pl-phases",`${dp} / ${PHASES.length}`,"pb-phases",100*dp/PHASES.length);
+  set("pl-hours",`${Math.round(dh)} / ${TOTAL_HOURS}`,"pb-hours",Math.min(100,100*dh/TOTAL_HOURS));
+}
+function resetProgress(){if(confirm("Reset all progress?")){localStorage.removeItem("fdescratch");render()}}
+function copyClone(el){navigator.clipboard.writeText(document.getElementById("clonecmd").textContent);el.querySelector("span:last-child").textContent="copied!";setTimeout(()=>el.querySelector("span:last-child").textContent="copy",1500)}
+render();
+</script>
+</body>
+</html>
